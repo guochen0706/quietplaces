@@ -123,6 +123,6 @@ class Google:
     #     print error_detail
 
 
-google = Google()
+# google = Google()
 # print google.get_ratings_and_reviews_for_location(Location(30.2682606, -97.74170910000001), name='Driskill Hotel Ballroom')
-print google.get_ratings_for_nearby_noisemakers(Location(30.2682606, -97.74170910000001))
+# print google.get_ratings_for_nearby_noisemakers(Location(30.2682606, -97.74170910000001))

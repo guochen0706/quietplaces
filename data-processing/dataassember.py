@@ -124,6 +124,17 @@ class PreWatsonNoiseAnalyzer:
             lodging["google_reviews"] = keeping_reviews
             del lodging["all_google_reviews"]
 
+    def add_noise_word_count_to_dataset(self, lodgings):
+        total = 0
+        for lodging in lodgings:
+            for review in lodging["google_reviews"]:
+                total += sum(map(int, dict(self.find_target_words_exact(review)).values()))
+
+            for review in lodging["fs_reviews"]:
+                total += sum(map(int, dict(self.find_target_words_exact(review)).values()))
+                
+            lodging["total_noise_words"] = total
+            
     # Many ways to skin this cat...up for review. Fuzzy matching was very inconsistent - tried many fuzzywuzzy variations. Switching to exact match.
     def submit_review_for_analysis(self, input_text):
         founds = self.find_target_words_exact(input_text)
@@ -155,10 +166,18 @@ class PreWatsonNoiseAnalyzer:
             #     return False
 
     def find_target_words_exact(self, input_text):
-        matches = re.findall('\w+',input_text.lower())
-        counts = collections.Counter(matches) # Count each occurance of words
-        if self.debug: print counts
-        return map(lambda x:(x,counts[x]),self.wanted) # Will print the counts for wanted words
+        output_list = []
+        for word in self.wanted:
+            # TODO: how to sum the counts if > 1
+            # print [ (val,cnt) for val, cnt in output_list if cnt  == 1 ]
+            if word in input_text:
+                output_list.append((word, 1))
+
+        return output_list
+        # matches = re.findall('\w+',input_text.lower())
+        # counts = collections.Counter(matches) # Count each occurance of words
+        # if self.debug: print counts
+        # return map(lambda x:(x,counts[x]),self.wanted) # Will print the counts for wanted words
 
 
 #@Deprecated for now.  Not working out well.
@@ -168,8 +187,19 @@ class PreWatsonNoiseAnalyzer:
             noise_words[noise_word] = fuzz.ratio(noise_word, input_text)
             # noise_words[noise_word] = process.extract(query, choices)(noise_word, input_text)
         return noise_words
-    
 
+
+# import operator
+# test_val = [('sec', 1), ('foo', 1), ('bar', 1)]
+#
+# new_list = map(operator.itemgetter(1), test_val)
+# print new_list
+
+# target_words = PreWatsonNoiseAnalyzer(True).find_target_words_exact("noisy noisy noise count em bitches this shit is noise factor noisy and live music and crowded as fuck")
+# print target_words
+# total = sum(map(int, dict(target_words).values()))
+# print total
+# print map(lambda x:(target_words),x[1])
 
 import pickle
 
@@ -201,6 +231,7 @@ if True: # Lets run review filtering
     # Prune FS reviews
     analyzer.remove_unsuitable_fs_reviews(results_in)
     analyzer.remove_unsuitable_google_reviews(results_in)
+    analyzer.add_noise_word_count_to_dataset(results_in)
 
     outfile = open('data/aggregated_api_data_keyword_filtered_reviews.pkl', 'w')
     pickle.dump(results_in, outfile)

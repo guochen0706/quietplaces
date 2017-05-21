@@ -10,6 +10,10 @@ from geo_search import QuietPlacesData
 
 app = Flask("quietplaces") # Needs defining at file global scope for thread-local sharing
 
+import random
+
+random.seed(2342)
+
 CORS(app)
 
 @app.route('/')
@@ -39,7 +43,7 @@ def getLodgingsForLatLong(lat, lng, range=1):
         lodging = {}
         lodging["lat"] = lodging_result["lat"]
         lodging["long"] = lodging_result["lng"]
-        lodging["score"] = lodging_result["score"]
+        lodging["score"] = float(lodging_result["score"]) * random.random() # TODO: Get scored data back out of dataframe and into file here
         lodging["name"] = lodging_result["name"]
         lodging["fs_id"] = lodging_result["lat"]
         lodging["places_id"] = lodging_result["google_id"]

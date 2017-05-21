@@ -98,7 +98,7 @@ class Google:
         noisemaker["name"] = place.name
         place.get_details()
         noisemaker["rating"] = str(place.rating)
-        noisemaker["location"] = place.geo_location
+        # noisemaker["location"] = place.geo_location
         return noisemaker
         # The following method has to make a further API call.
         #place.get_details()

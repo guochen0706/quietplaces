@@ -2,7 +2,6 @@ from foursquare import FourSquareApi
 from googleapis import Location
 from googleapis import Google
 from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 class ApiConsumer:
     def __init__(self, address):

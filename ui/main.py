@@ -6,7 +6,10 @@ from watson_developer_cloud import ToneAnalyzerV3, VisualRecognitionV3, Language
 from flask_cors import CORS
 from geo_search import QuietPlacesData
 
-app = Flask(__name__)
+# app = Flask(__name__)
+
+app = Flask("quietplaces") # Needs defining at file global scope for thread-local sharing
+
 CORS(app)
 
 @app.route('/')
@@ -19,11 +22,15 @@ def version():
 	
 @app.route('/getNoiseScores')
 def getNoiseScores():
-    return getLodgingsForLatLong(lat=30.268162,long=-97.7417)
+    # tmp = getLodgingsForLatLong(lat=30.268162,lng=-97.7417, range=1)
+    # from IPython import embed
+    # embed()
+    # return "nope"
+    return json.dumps(getLodgingsForLatLong(lat=30.268162,lng=-97.7417, range=1))
 
 def getLodgingsForLatLong(lat, lng, range=1):
     output = []
-    for lodging_result in qpd.geo_search(lat=lat, lng=lng, range=range):
+    for lodging_result in app.qpd.geo_search(lat=lat, lng=lng, range=range):
         lodging = {}
         lodging["lat"] = lodging_result["lat"]
         lodging["long"] = lodging_result["lng"]
@@ -39,11 +46,15 @@ def getLodgingsForLatLong(lat, lng, range=1):
         output.append(lodging)
     return output
 
+def setup_app(app):
+    app.qpd = QuietPlacesData('data_file.pkl', True)
+
+
+setup_app(app)
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 9099))
     app.run(host='0.0.0.0', port=port)
-    qpd = QuietPlacesData('data_file.pkl', False)
-
+    
 
     # tone_analyzer = ToneAnalyzerV3(username='5637355c-a50a-496c-8305-b8820d5c4b63',
 #     password='53cQKHtdm2lA', 

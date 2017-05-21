@@ -29,32 +29,32 @@ class QuietPlacesData:
         return lodgings
 
 
-def getLodgingsForLatLong(lat, lng, range=1):
-    output = []
+# def getLodgingsForLatLong(lat, lng, range=1):
+#     output = []
+#
+#     for lodging_result in qpd.geo_search(lat=lat, lng=lng, range=range):
+#         #Target:
+#         # {"hotels": [{"lat": 30.268162,"long": -97.7417,"score": 20,"name":
+#         #    "Driskill Hotel","id": 1,"heatmap": []}, {"lat": 30.264444,"long":
+#         #    -97.74184900000002,"score": 60,"name": "Hyatt Place Downtown","id":
+#         #    2,"heatmap": []}, {"lat": 30.2655492,"long": -97.7466255,"score":
+#         #    90,"name": "W Austin","id": 3,"heatmap": []}]}
+#         lodging = {}
+#         lodging["lat"] = lodging_result["lat"]
+#         lodging["long"] = lodging_result["lng"]
+#         lodging["score"] = lodging_result["score"]
+#         lodging["name"] = lodging_result["name"]
+#         lodging["fs_id"] = lodging_result["lat"]
+#         lodging["places_id"] = lodging_result["google_id"]
+#         lodging["google_reviews"] = lodging_result["google_reviews"]
+#         if "reviews" in lodging_result: lodging["fs_reviews"] = lodging_result["reviews"]
+#
+#         heatmap = lodging_result["nearby_noisemakers"]
+#         lodging["heatmap"] = heatmap
+#         output.append(lodging)
+#
+#     return output
 
-    for lodging_result in qpd.geo_search(lat=lat, lng=lng, range=range):
-        #Target:
-        # {"hotels": [{"lat": 30.268162,"long": -97.7417,"score": 20,"name":
-        #    "Driskill Hotel","id": 1,"heatmap": []}, {"lat": 30.264444,"long":
-        #    -97.74184900000002,"score": 60,"name": "Hyatt Place Downtown","id":
-        #    2,"heatmap": []}, {"lat": 30.2655492,"long": -97.7466255,"score":
-        #    90,"name": "W Austin","id": 3,"heatmap": []}]}
-        lodging = {}
-        lodging["lat"] = lodging_result["lat"]
-        lodging["long"] = lodging_result["lng"]
-        lodging["score"] = lodging_result["score"]
-        lodging["name"] = lodging_result["name"]
-        lodging["fs_id"] = lodging_result["lat"]
-        lodging["places_id"] = lodging_result["google_id"]
-        lodging["google_reviews"] = lodging_result["google_reviews"]
-        if "reviews" in lodging_result: lodging["fs_reviews"] = lodging_result["reviews"]
 
-        heatmap = lodging_result["nearby_noisemakers"]
-        lodging["heatmap"] = heatmap
-        output.append(lodging)
-
-    return output
-
-
-qpd = QuietPlacesData('data_file.pkl', True)
-print getLodgingsForLatLong(lat=30.268162, lng=-97.7417, range=1)
+# qpd = QuietPlacesData('data_file.pkl', True)
+# print getLodgingsForLatLong(lat=30.268162, lng=-97.7417, range=1)

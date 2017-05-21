@@ -22,11 +22,16 @@ def version():
 	
 @app.route('/getNoiseScores')
 def getNoiseScores():
-    # tmp = getLodgingsForLatLong(lat=30.268162,lng=-97.7417, range=1)
+    all_args = request.args.to_dict()
+    print all_args
+    # tmp = getLodgingsForLatLong(lat=float(all_args["lat"]),lng=float(all_args["lng"]), range=float(all_args["range"]))
     # from IPython import embed
     # embed()
-    # return "nope"
-    return json.dumps(getLodgingsForLatLong(lat=30.268162,lng=-97.7417, range=1))
+    # return "nope"                        getLodgingsForLatLong(lat=30.268162,lng=-97.7417, range=1)
+    lat = 30.268162 if "lat" not in all_args else float(all_args["lat"])
+    lng = -97.7417 if "lng" not in all_args else float(all_args["lng"])
+    range = 1 if "range" not in all_args else float(all_args["range"])
+    return json.dumps(getLodgingsForLatLong(lat=lat,lng=lng, range=range))
 
 def getLodgingsForLatLong(lat, lng, range=1):
     output = []

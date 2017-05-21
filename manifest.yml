@@ -1,9 +1,9 @@
 applications:
 - disk_quota: 1024M
-  host: chyld-python
-  name: chyld-python
+  host: quietplace-api
+  name: quietplace-api
   path: .
-  domain: doesitsuck.mybluemix.net
+  domain: quietplace-api.mybluemix.net
   instances: 1
   memory: 256M
   buildpack: https://github.com/cloudfoundry/buildpack-python.git#v1.5.18

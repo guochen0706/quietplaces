@@ -1,7 +1,7 @@
 applications:
 - disk_quota: 1024M
-  host: quietplaces
-  name: quietplaces
+  host: quietplace-api
+  name: quietplace-api
   path: .
   domain: mybluemix.net
   instances: 1

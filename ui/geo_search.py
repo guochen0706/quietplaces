@@ -8,13 +8,13 @@ class QuietPlacesData:
         self.debug = debug
         fileObject = open(datafile, 'r')
         self.data = pickle.load(fileObject)
-        print 'loaded ' + str(len(self.data)) + 'records, initializing index'
+        # print 'loaded ' + str(len(self.data)) + 'records, initializing index'
         self.__load_geo_index()
         
     def __load_geo_index(self):
         self.geo_index = GeoGridIndex()
         for lodging in self.data:
-            if self.debug: print 'loading geo for:' + lodging["name"]
+            # if self.debug: print 'loading geo for:' + lodging["name"]
             lat = float(lodging["lat"])
             lng = float(lodging["lng"])
             self.geo_index.add_point(GeoPoint(lat, lng, ref=lodging))
@@ -24,7 +24,7 @@ class QuietPlacesData:
         lodgings = []
 
         for geo_point, distance in self.geo_index.get_nearest_points(center_point, range, 'km'):
-            if self.debug: print("We found {0} in {1} km".format(geo_point.ref["name"], distance))
+            # if self.debug: print("We found {0} in {1} km".format(geo_point.ref["name"], distance))
             lodgings.append(geo_point.ref)
         return lodgings
 

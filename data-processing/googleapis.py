@@ -22,9 +22,12 @@ class Google:
         if debug: print 'hitting:' + url
         results = requests.get(url).json()
 
-        #Forcing to 1. Not sure what > 1 actually means for an explicit address.                            
-        location_dict = results["results"][0]["geometry"]["location"]
-        return Location(location_dict["lat"], location_dict["lng"])
+        #Forcing to 1. Not sure what > 1 actually means for an explicit address.
+        if len(results["results"]) > 0:
+            location_dict = results["results"][0]["geometry"]["location"]
+            return Location(location_dict["lat"], location_dict["lng"])
+        else:
+            return Location(0, 0)
 
     def get_ratings_and_reviews_for_location(self, location, name):
         query_result = self.google_places.nearby_search(lat_lng={ "lat": location.latitude, "lng": location.longitude },
@@ -41,12 +44,12 @@ class Google:
         # Returned places from a query are place summaries.
         location_detail["google_id"] = place.place_id
         location_detail["name"] = place.name
-        location_detail["google_rating"] = str(place.rating)
 
         # The following method has to make a further API call.
         place.get_details()
-        location_detail["google_hours"] = place.details["opening_hours"]
-        location_detail["reviews"] = place.details["reviews"]
+        location_detail["google_rating"] = str(place.rating)
+        if "opening_hours" in place.details: location_detail["google_hours"] = place.details["opening_hours"]
+        if "reviews" in place.details: location_detail["reviews"] = place.details["reviews"]
 
         return location_detail
 

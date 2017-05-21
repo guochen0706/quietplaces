@@ -54,6 +54,9 @@ class NoiseAnalyzerByLocation:
         for venue in fs_api.searchForVenues("Hotel"):
 
             address = ' '.join(venue["location"]["formattedAddress"])
+            #If it's not a possibly real damned address (many are not)
+            if not address[0:1].isdigit():
+                continue
             result = { "fs_id": venue["id"], "name": venue["name"], "address": address, "score": 100 }
             location = fs_api.getLocation(address)
             result["lat"] = str(location.latitude)
@@ -90,19 +93,21 @@ class NoiseAnalyzerByLocation:
         google_data = self.google.get_ratings_and_reviews_for_location(Location(lodging["lat"], lodging["lng"]), name=lodging["name"])
 
         # remove the reviews so we can curate and add what we want
-        google_reviews = google_data["reviews"]
-        del google_data["reviews"]
+        if "reviews" in google_data:
+            google_reviews = google_data["reviews"]
+            del google_data["reviews"]
 
         # Add the rest
         lodging.update(google_data)
 
-        keeper_google_reviews = []
-        # Add the reviews
-        for review in google_reviews:
-            if review["rating"] < 4.1 and self.submit_review_for_analysis(review["text"]):
-                keeper_google_reviews.append(review)
-        
-        lodging["google_reviews_to_check"] = keeper_google_reviews
+        if "reviews" in google_data:
+            keeper_google_reviews = []
+            # Add the reviews
+            for review in google_reviews:
+                if review["rating"] < 4.1 and self.submit_review_for_analysis(review["text"]):
+                    keeper_google_reviews.append(review)
+
+            lodging["google_reviews_to_check"] = keeper_google_reviews
 
     def load_google_noisemakers(self, lodging):
         # Then load data for the "surrounding noisemakers" and throw those in. While we were not able to

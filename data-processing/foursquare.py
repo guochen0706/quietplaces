@@ -37,13 +37,15 @@ class FourSquareApi:
         return Google().get_location_from_address(address)
 
     def __getLocation(self):
-        geolocator = Nominatim()
+        # geolocator = Nominatim()
         self.location = Google().get_location_from_address(self.address)
         return self.location
 
 
     def searchForVenues(self, search_query):
-        venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&query={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, search_query, RADIUS, LIMIT)
+        FS_CAT_HOTEL = '4bf58dd8d48988d1fa931735'
+        # venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&query={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, search_query, RADIUS, LIMIT)
+        venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&category={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, FS_CAT_HOTEL, RADIUS, LIMIT)
         if debug: print 'hitting:' + venue_url
         results = requests.get(venue_url).json()
         return results["response"]["venues"]

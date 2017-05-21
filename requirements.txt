@@ -1,3 +1,8 @@
 Flask==0.10.1
 watson-developer-cloud==0.26.0
 foursquare==1!2016.9.12
+
+fuzzywuzzy==0.15.0
+
+python-google-places==1.4.0
+python-Levenshtein==0.12.0

@@ -1,33 +1,24 @@
 from geopy.geocoders import Nominatim # module to convert an address into latitude and longitude values
 import requests # library to handle requests
+from googleapis import Google
 
 FS_BASE_URL = 'https://api.foursquare.com/v2/'
 FS_CLIENT_ID = "P2504I5EFCH0FAYZSXTYEWGS3BHU5STVCBRF3JALWIOESOVD"
 FS_CLIENT_SECRET = "2YOTPR1XQ4N4MKOOHGRC3J44T5BUEOMSU515A5CQVMEPIYFE"
 FS_VERSION = "20170511"
-LIMIT = 100
+LIMIT = 1000
+RADIUS = 805 # Meters in 1/2 mile.
 
-# Data Containers
-class Location:
-    def __init__(self, lat, long):
-        self.latitude = lat
-        self.longitude = long
-
-class Venue:
-    def __init__(self):
-        self.name = ''
-        self.categories = []
-        self.twitter = ''
-        self.location = ''
-        self.menu_link = ''
-
+debug = True
 
 class FourSquareApi:
+
 
     def __init__(self, address):
         self.address = address
         self.location = self.__getLocation()
         self.categories = self.__categories()
+        self.google = Google()
 
     def __categories(self):
         url = FS_BASE_URL + "/venues/categories?client_id={}&client_secret={}&v={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, FS_VERSION)
@@ -39,16 +30,21 @@ class FourSquareApi:
             category_list.append(category)
         return category_list
 
+# This started failing so had to replace with google maps API
+    def getLocation(self, address):
+        # geolocator = Nominatim()
+        # return geolocator.geocode(address)
+        return Google().get_location_from_address(address)
+
     def __getLocation(self):
         geolocator = Nominatim()
-        self.location = geolocator.geocode(self.address)
+        self.location = Google().get_location_from_address(self.address)
         return self.location
 
 
     def searchForVenues(self, search_query):
-        radius = 1000
-        venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&query={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, search_query, radius, LIMIT)
-        print 'hitting:' + venue_url
+        venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&query={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, search_query, RADIUS, LIMIT)
+        if debug: print 'hitting:' + venue_url
         results = requests.get(venue_url).json()
         return results["response"]["venues"]
 
@@ -57,3 +53,8 @@ class FourSquareApi:
         results = requests.get(tips_url).json()
         return results["response"]["tips"]["items"]
 
+    def checkinsForVenue(self, venue_id):
+        checkins_url = FS_BASE_URL + "venues/{}/stats?client_id={}&client_secret={}&v={}".format(venue_id, FS_CLIENT_ID, FS_CLIENT_SECRET, FS_VERSION)
+        if debug: print checkins_url
+        results = requests.get(checkins_url).json()
+        return results["response"]

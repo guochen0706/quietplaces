@@ -10,7 +10,7 @@ from pandas.io.json import json_normalize
 # Reading data back
 
 
-fileObject = open('data/aggregated_api_data.pkl', 'r')
+fileObject = open('data/aggregated_api_data_keyword_filtered_reviews.pkl', 'r')
 # load the object from the file into var b
 results_in = pickle.load(fileObject)
 
@@ -20,9 +20,10 @@ results_in = pickle.load(fileObject)
 # for datum in data:
 #     print datum
 
-dataframe = json_normalize(results_in)
-print dataframe.head()
-
+df = json_normalize(results_in)
+print df.head()
+print df.dtypes
+print df.columns.to_series().groupby(df.dtypes).groups
 # Do some work and augment the data...
 
 results = []

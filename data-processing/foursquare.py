@@ -43,7 +43,7 @@ class FourSquareApi:
 
 
     def searchForVenues(self, search_query):
-        FS_CAT_HOTEL = '4bf58dd8d48988d1fa931735'
+        FS_CAT_HOTEL = '4bf58dd8d48988d1fa931735' #Disconnected keyword search query and presently hardcoing to Hotel category due to keyword innaccuracy. Then again...Foursquare "hotel cateogory"  is pretty inaccurate too. :(
         # venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&query={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, search_query, RADIUS, LIMIT)
         venue_url = FS_BASE_URL + "venues/search?client_id={}&client_secret={}&ll={},{}&v={}&category={}&radius={}&limit={}".format(FS_CLIENT_ID, FS_CLIENT_SECRET, self.location.latitude, self.location.longitude, FS_VERSION, FS_CAT_HOTEL, RADIUS, LIMIT)
         if debug: print 'hitting:' + venue_url

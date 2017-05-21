@@ -10,7 +10,7 @@ from pandas.io.json import json_normalize
 # Reading data back
 
 
-fileObject = open('data/aggregated_api_data.json', 'r')
+fileObject = open('data/aggregated_api_data.pkl', 'r')
 # load the object from the file into var b
 results_in = pickle.load(fileObject)
 
@@ -27,6 +27,6 @@ print dataframe.head()
 
 results = []
 
-outfile = open('data/aggregated_api_data_watson_enriched.json', 'w')
+outfile = open('data/aggregated_api_data_watson_enriched.pkl', 'w')
 pickle.dump(results, outfile)
 outfile.close()

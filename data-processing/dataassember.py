@@ -18,23 +18,37 @@ class ApiConsumer:
         # Test Venues   - look for venues with comments/tips with target phrases
         results = []
 
-        for venue in self.fs_api.searchForVenues("Hotel"):
+        #possibly_hotels = ['hotel', 'lodging', 'travel', 'residen']
 
-            address = ' '.join(venue["location"]["formattedAddress"])
-            #If it's not a possibly real damned address (many are not)
-            if not address[0:1].isdigit():
-                continue
-            result = { "fs_id": venue["id"], "name": venue["name"], "address": address, "score": 100 }
-            location = self.fs_api.getLocation(address)
-            result["lat"] = str(location.latitude)
-            result["lng"] = str(location.longitude)
-            reviews = []
-            for comment in self.fs_api.commentsForVenue(venue["id"]):
-                reviews.append(comment["text"])
+        venues = self.fs_api.searchForVenues("Hotel")
+        print 'retrieved:' + str(len(venues)) + ' venues'
+        for venue in venues:
 
-            result["fs_reviews_to_check"] = reviews
-            results.append(result)
+            is_possibly_hotel = False
+            for category in venue["categories"]:
+                if category["id"] == '4bf58dd8d48988d1fa931735':
+                    is_possibly_hotel = True
 
+            if is_possibly_hotel:
+                address = ' '.join(venue["location"]["formattedAddress"])
+                #If it's not a possibly real damned address (many are not)
+                if not address[0:1].isdigit():
+                    continue
+                result = { "fs_id": venue["id"], "name": venue["name"], "address": address, "score": 100 }
+                location = self.fs_api.getLocation(address)
+                result["lat"] = str(location.latitude)
+                result["lng"] = str(location.longitude)
+                reviews = []
+
+                for comment in self.fs_api.commentsForVenue(venue["id"]):
+                    reviews.append(comment["text"])
+
+                result["fs_reviews_to_check"] = reviews
+                result["fs_stats"] = venue["stats"]
+
+                results.append(result)
+
+        print 'of ' + str(len(venues)) + ' venues,' + str(len(results)) + ' were hotels!'
         return results
         # search = re.search( r'.*(noise).*|.*(busy).*', line, re.M|re.I)
         # if search:
@@ -182,7 +196,7 @@ if True: # Lets run review filtering
     # load the object from the file into var b
     results_in = pickle.load(fileObject)
 
-    analyzer = PreWatsonNoiseAnalyzer(True)
+    analyzer = PreWatsonNoiseAnalyzer(False)
 
     # Prune FS reviews
     analyzer.remove_unsuitable_fs_reviews(results_in)

@@ -7,7 +7,7 @@ FS_CLIENT_ID = "P2504I5EFCH0FAYZSXTYEWGS3BHU5STVCBRF3JALWIOESOVD"
 FS_CLIENT_SECRET = "2YOTPR1XQ4N4MKOOHGRC3J44T5BUEOMSU515A5CQVMEPIYFE"
 FS_VERSION = "20170511"
 FS_CAT_HOTEL = '4bf58dd8d48988d1fa931735' #Disconnected keyword search query and presently hardcoing to Hotel category due to keyword innaccuracy. Then again...Foursquare "hotel cateogory"  is pretty inaccurate too. :(
-LIMIT = 1
+LIMIT = 1000
 # RADIUS = 805 # Meters in 1/2 mile.
 RADIUS = 1610 # Meters in 1 mile.
 

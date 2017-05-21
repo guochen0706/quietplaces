@@ -203,7 +203,7 @@ class PreWatsonNoiseAnalyzer:
 
 import pickle
 
-if False: # Lets run api pull
+if True: # Lets run api pull
     # Load up the data from foursquare and google. This way we get "all the data" for our baseline POC only once time.
     api_clients = ApiConsumer("119 Nueces St, Austin, TX 78701")
     results = api_clients.load_foursquare_data()

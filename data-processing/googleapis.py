@@ -37,6 +37,7 @@ class Google:
             print 'Location:' + name + ' not found in google'
             return {}
 
+# TODO: SHould change this to a name fuzzy match.
         if len(query_result.places) > 1: print 'Location:' + name + ' found ' + str(len(query_result.places)) + ' times in google. Selecting first.'
         place = query_result.places[0]
         location_detail = {}
@@ -97,7 +98,7 @@ class Google:
         noisemaker["name"] = place.name
         place.get_details()
         noisemaker["rating"] = str(place.rating)
-
+        noisemaker["location"] = place.geo_location
         return noisemaker
         # The following method has to make a further API call.
         #place.get_details()
